@@ -3,9 +3,8 @@ export const userInfos = (user) => {
     id: user._id,
     userName: user.userName,
     email: user.email,
-    clockIn: user.clockIn,
-    clockingLog: user.clockingLog,
-    subTask: user.subTask,
+    role: user.role,
+    projects: user.projects,
   };
   return formatedUser;
 };
