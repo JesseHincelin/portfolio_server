@@ -45,7 +45,7 @@ const deleteMessage = async (userId, messageId) => {
     const user = await User.findById(userId);
     if (user.role !== ROLE.ADMIN || !user)
       throw new Error("You don't have the rights to delete a message");
-    const deletedMessage = await Message.deleteOne({ id: messageId });
+    await Message.deleteOne({ _id: messageId });
     messages = await Message.find();
   } catch (e) {
     messageError = `Could not delete the message : ${e.message}`;

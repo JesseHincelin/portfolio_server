@@ -7,7 +7,7 @@ const initProjectRoutes = (app, pv, sm, jwt) => {
   router.patch("/edit-project", jwt, sm, projectController.editProject);
   router.delete("/delete-project/:projectId", jwt, sm, projectController.deleteProject);
 
-  app.use("/message", router);
+  app.use("/project", router);
 };
 
 export default initProjectRoutes;

@@ -66,15 +66,9 @@ const deleteProject = async (userId, projectId) => {
   try {
     const user = await User.findById(userId);
     if (!user || user.role !== ROLE.ADMIN) throw new Error("You don't have the right to proceed");
-    const project = await Project.deleteOne({ id: projectId });
-    const newProjectIdList = [];
-    for (let i = 0; i < user.projects.length; i++) {
-      if (user.projects[i] !== projectId) {
-        newProjectIdList.push(user.projects[i]);
-      }
-    }
-    user.projects = newProjectIdList;
+    user.projects.pull(projectId);
     await user.save();
+    await Project.deleteOne({ _id: projectId });
   } catch (e) {
     projectError = `Could not delete the project : ${e.message}`;
   } finally {

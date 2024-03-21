@@ -26,6 +26,6 @@ const projectSchema = new Schema({
   },
 });
 
-const Project = createCollection("project", projectSchema);
+const Project = createCollection("Project", projectSchema);
 
 export default Project;

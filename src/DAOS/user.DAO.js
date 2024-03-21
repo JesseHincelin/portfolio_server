@@ -1,4 +1,5 @@
-import User from "../Models/user.model.js";
+import Project from "../Models/project.model.js";
+import User, { ROLE } from "../Models/user.model.js";
 import { compareHash } from "../Utils/hash.utils.js";
 
 const findByUserName = async (userName) => {
@@ -11,6 +12,19 @@ const findByUserName = async (userName) => {
     errorByUserName = `Could not find user with this username : ${e.message}`;
   } finally {
     return { errorByUserName, userByUserName };
+  }
+};
+
+const findByEmail = async (email) => {
+  let errorByEmail = null;
+  let userByEmail = null;
+
+  try {
+    userByEmail = await User.findOne({ email: email });
+  } catch (e) {
+    errorByEmail = `Could not find user with this email : ${e.message}`;
+  } finally {
+    return { errorByEmail, userByEmail };
   }
 };
 
@@ -56,7 +70,7 @@ const login = async (userName, password) => {
   let user = null;
 
   try {
-    user = await User.findOne({ userName: userName });
+    user = await User.findOne({ userName: userName }).populate({ path: "projects" });
     if (!user) throw new Error("Could not find this user");
     const { match, errorMatch } = await compareHash(password, user.password);
     if (!match || !!errorMatch) throw new Error(errorMatch);
@@ -67,9 +81,30 @@ const login = async (userName, password) => {
   }
 };
 
+const deleteUser = async (userId, idToDelete) => {
+  let error = null;
+  let user = null;
+
+  try {
+    user = await User.findById(userId);
+    if (!user || user.role !== ROLE.ADMIN) throw new Error("You don't have the rights to proceed");
+    const userToDelete = await User.findById(idToDelete);
+    for (let i = 0; i < userToDelete.projects.length; i++) {
+      await Project.deleteOne({ _id: userToDelete.projects[i] });
+    }
+    await User.deleteOne({ _id: idToDelete });
+  } catch (e) {
+    error = `Could not delete the user : ${e.message}`;
+  } finally {
+    return { user, error };
+  }
+};
+
 export const userDAO = {
   findByUserName,
+  findByEmail,
   findById,
   register,
   login,
+  deleteUser,
 };
