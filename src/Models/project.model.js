@@ -20,6 +20,10 @@ const projectSchema = new Schema({
     required: [true, "Presentation picture required"],
   },
   images: [{ url: String }],
+  visible: {
+    type: Boolean,
+    default: true,
+  },
 });
 
 const Project = createCollection("project", projectSchema);
