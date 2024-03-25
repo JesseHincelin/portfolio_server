@@ -5,14 +5,28 @@ const projectSchema = new Schema({
     type: String,
     required: [true, "Project name required"],
   },
-  description: {
-    type: String,
-    required: [true, "Project description required"],
-  },
+  description: [
+    {
+      english: {
+        type: String,
+        required: [true, "Project description required"],
+      },
+      french: {
+        type: String,
+        required: [true, "Project description required"],
+      },
+    },
+  ],
   paragraph: [
     {
-      paragraphTitle: String,
-      paragraphContent: String,
+      english: {
+        paragraphTitle: String,
+        paragraphContent: String,
+      },
+      french: {
+        paragraphTitle: String,
+        paragraphContent: String,
+      },
     },
   ],
   mainPicture: {
